@@ -1,5 +1,6 @@
+import { PinInput, PinInputField } from '@chakra-ui/react';
 import type { ActionFunctionArgs, MetaFunction } from '@remix-run/node';
-import { Form, useLoaderData } from '@remix-run/react';
+import React from 'react';
 
 export const meta: MetaFunction = () => {
     return [{ title: 'Re-Wordle' }, { name: 'description', content: 'Welcome to Remix!' }];
@@ -27,16 +28,18 @@ const colorMap = {
 };
 
 export default function Index() {
-    const { word } = useLoaderData<typeof loader>();
     return (
         <div className="font-sans p-4">
-            <Form>
-                <ul className="list-disc mt-4 pl-6 space-y-2">
-                    {word.map((letter, idx) => (
-                        <input key={`letter-${idx}`} name={idx.toString()} />
-                    ))}
-                </ul>
-            </Form>
+            {Array.from({ length: 6 }, (_, i) => (
+                <React.Fragment key={i}>
+                    <PinInput type="alphanumeric">
+                        {Array.from({ length: 5 }, (_, j) => (
+                            <PinInputField key={j} />
+                        ))}
+                    </PinInput>
+                    <br />
+                </React.Fragment>
+            ))}
         </div>
     );
 }
