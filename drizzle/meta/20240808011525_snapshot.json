@@ -1,0 +1,160 @@
+{
+  "id": "ef59e1b5-0933-42be-8b02-72af939ca88a",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.games": {
+      "name": "games",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(32)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "solution_word_id": {
+          "name": "solution_word_id",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "ended_at": {
+          "name": "ended_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "game_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'in_progress'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "games_solution_word_id_users_id_fk": {
+          "name": "games_solution_word_id_users_id_fk",
+          "tableFrom": "games",
+          "tableTo": "users",
+          "columnsFrom": [
+            "solution_word_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.guesses": {
+      "name": "guesses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(32)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "game_id": {
+          "name": "game_id",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "word": {
+          "name": "word",
+          "type": "varchar(5)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attempt_number": {
+          "name": "attempt_number",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "guesses_game_id_games_id_fk": {
+          "name": "guesses_game_id_games_id_fk",
+          "tableFrom": "guesses",
+          "tableTo": "games",
+          "columnsFrom": [
+            "game_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(32)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "word": {
+          "name": "word",
+          "type": "varchar(5)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_solution": {
+          "name": "is_solution",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {
+    "public.game_status": {
+      "name": "game_status",
+      "schema": "public",
+      "values": [
+        "in_progress",
+        "won",
+        "lost"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
