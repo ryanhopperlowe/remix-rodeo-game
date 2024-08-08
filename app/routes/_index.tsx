@@ -1,7 +1,12 @@
-import React from 'react';
+<<<<<<< HEAD
+=======
 import { PinInput, PinInputField } from '@chakra-ui/react';
-import { Form } from '@remix-run/node';
 import type { ActionFunctionArgs, MetaFunction } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+>>>>>>> 2598c85 (add fake attempts)
+import { PinInput, PinInputField } from '@chakra-ui/react';
+import type { ActionFunctionArgs, MetaFunction } from '@remix-run/node';
+import { Form } from '@remix-run/node';
 
 export const meta: MetaFunction = () => {
     return [{ title: 'Re-Wordle' }, { name: 'description', content: 'Welcome to Remix!' }];
@@ -29,7 +34,7 @@ const colorMap = {
 };
 
 export default function Index() {
-    const attempts = [[], [], [], [], [], []]
+    const { attempts } = useLoaderData<typeof loader>();
 
     return (
         <div className="font-sans p-4">
