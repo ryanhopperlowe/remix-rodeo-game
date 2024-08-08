@@ -1,6 +1,7 @@
-import { PinInput, PinInputField } from '@chakra-ui/react';
-import type { ActionFunctionArgs, MetaFunction } from '@remix-run/node';
 import React from 'react';
+import { PinInput, PinInputField } from '@chakra-ui/react';
+import { Form } from '@remix-run/node';
+import type { ActionFunctionArgs, MetaFunction } from '@remix-run/node';
 
 export const meta: MetaFunction = () => {
     return [{ title: 'Re-Wordle' }, { name: 'description', content: 'Welcome to Remix!' }];
@@ -28,18 +29,28 @@ const colorMap = {
 };
 
 export default function Index() {
+    const attempts = [[], [], [], [], [], []]
+
     return (
         <div className="font-sans p-4">
-            {Array.from({ length: 6 }, (_, i) => (
-                <React.Fragment key={i}>
-                    <PinInput type="alphanumeric">
-                        {Array.from({ length: 5 }, (_, j) => (
-                            <PinInputField key={j} />
-                        ))}
-                    </PinInput>
-                    <br />
-                </React.Fragment>
-            ))}
+            <Form action="/attempt" method="post">
+                {attempts.map((attempt, i) => (
+                    <div key={i} className="flex flex-row">
+                        {attempt[index - 1].length
+                            ? <PinInput type="alphanumeric">
+                                    {Array.from({ length: 5 }, (_, j) => (
+                                        <PinInputField key={j} />
+                                    ))}
+                                </PinInput>
+                            : <div>
+                                    {Array.from({ length: 5 }, (_, j) => (
+                                        <div key={j}>empty row</div>
+                                    ))}
+                                </div>
+                        }
+                    </div>
+                ))}
+            </Form>
         </div>
     );
 }
