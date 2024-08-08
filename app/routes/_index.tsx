@@ -10,11 +10,7 @@ export const meta: MetaFunction = () => {
 
 const wordToGuess = faker.word.noun(5);
 
-const colorMap = {
-    0: 'black',
-    1: 'green',
-    2: 'yellow'
-};
+// TODO: announce when user loses game, possibly clear inputs, allow user to restart, etc
 
 const defaultNumberOfGuesses = 6;
 // An array of guesses the user has submitted
