@@ -1,7 +1,7 @@
 import { PinInput, PinInputField } from '@chakra-ui/react';
 import { faker } from '@faker-js/faker';
 import type { ActionFunctionArgs, MetaFunction } from '@remix-run/node';
-import { Form, useLoaderData } from '@remix-run/react';
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 export const meta: MetaFunction = () => {
@@ -20,6 +20,7 @@ export async function loader() {
     const remainingAttempts = defaultNumberOfGuesses - attemptedGuesses.length;
 
     return {
+        wordToGuess,
         guesses: attemptedGuesses,
         remainingAttempts
     };
@@ -48,22 +49,30 @@ export async function action({ request }: ActionFunctionArgs) {
     // Add the guess to the list of entries
     attemptedGuesses.push(attemptedGuess);
 
-    return null;
+    const enteredCorrectWord = attemptedGuess.join('') === wordToGuess;
+
+    return {
+        enteredCorrectWord
+    };
 }
 
 export default function Index() {
-    const { guesses, remainingAttempts } = useLoaderData<typeof loader>();
+    const { guesses, remainingAttempts, wordToGuess } = useLoaderData<typeof loader>();
+    const actionData = useActionData<typeof action>();
 
-    // TODO: remove from here
-    console.log({ guesses, wordToGuess });
-
+    console.log({ wordToGuess });
     return (
         <div className="font-sans p-4">
+            {actionData?.enteredCorrectWord ? (
+                <div>
+                    <p>You guessed the right word!</p>
+                </div>
+            ) : null}
             {guesses.map((guess, i) => {
                 const word = guess.join('');
 
                 return (
-                    <div key={i} className="flex flex-row">
+                    <div key={i} className="flex flex-row gap-1 mt-1">
                         <PinInput type="alphanumeric" defaultValue={word}>
                             {guess.map((character, charIdx) => {
                                 // If the character is in the right place highlight green
@@ -82,8 +91,8 @@ export default function Index() {
             })}
 
             {remainingAttempts !== 0 ? (
-                <div className="flex flex-row" key={remainingAttempts}>
-                    <Form method="post">
+                <div key={remainingAttempts} className="mt-1">
+                    <Form method="post" className="flex flex-row gap-1 mt-1">
                         <PinInput type="alphanumeric" placeholder="">
                             {Array.from({ length: 5 }, (_, j) => (
                                 <PinInputField key={j} name={j.toString()} required type="text" pattern="[a-zA-Z]*" />
@@ -95,7 +104,7 @@ export default function Index() {
             ) : null}
 
             {Array.from({ length: remainingAttempts - 1 }, (_, index) => (
-                <div key={index} className="flex flex-row">
+                <div key={index} className="flex flex-row gap-1 mt-1">
                     <PinInput type="alphanumeric" placeholder="">
                         {Array.from({ length: 5 }, (_, j) => (
                             <PinInputField key={j} />
